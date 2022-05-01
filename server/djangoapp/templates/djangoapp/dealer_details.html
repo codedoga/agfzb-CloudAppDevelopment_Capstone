@@ -94,19 +94,22 @@
         {% if user.is_authenticated %}
         <h3> Customer reviews </h3>
         <a class="btn btn-link" href="/djangoapp/add_review?dealer={{dealer.id}}"> Add review </a>
-        <div style="flex-direction:row;">
-            
+          <div class="card-columns">
             {% for review in reviews %}
             <div class="card" style="width: 18rem;">
+                <div class="card-title">
+                  <img class="card-img-left" style="width:2rem;" src="{{MEDIA_URL}}/emoji/{{review.sentiment}}.png">
+                </div>
                 <div class="card-body">
-                  <h6 class="card-title text-capitalize">{{review.sentiment}}</h6>
-                  <h4 class="card-text"><b>{{review.review}}</b></h4>
-                  <div class="card-text">{{review.name}},</div>
                   <div class="card-text"><i>{{review.car_make}} {{review.car_model}}</i></div>
+                  <h4 class="card-text"><b>{{review.review}}</b></h4>
+                  <div class="card-text">{{review.car_year}}</div>
+                  
 
                 </div>
               </div>
             {% endfor %}
+            
             
    
             {% endif%}
