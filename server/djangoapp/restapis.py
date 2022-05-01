@@ -17,9 +17,10 @@ import urllib
 
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
-def get_dealers_from_cf(url, **kwargs):
+def get_dealers_from_cf(**kwargs):
     results = []
     # Call get_request with a URL parameter
+    url="http://codedoga-cloudapp.eu-gb.mybluemix.net/api/dealership"
     json_result = requests.get(url).json()
     if json_result:
         # For each dealer object
@@ -36,6 +37,7 @@ def get_dealers_from_cf(url, **kwargs):
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
 def get_dealer_by_id_from_cf(url, dealerId):
     results = []
+    url = f"http://codedoga-cloudapp.eu-gb.mybluemix.net/api/reviews"
     json_result = requests.get(url).json()
     for review in json_result:
         if str(review["dealership"]) == dealerId:
