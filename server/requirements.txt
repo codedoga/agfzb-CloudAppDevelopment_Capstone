@@ -1,7 +1,7 @@
 requests
 Django
 gunicorn==20.0.4
-Pillow==8.0.1
+Pillow==9.1.0
 certifi==2021.5.30
 charset-normalizer==2.0.4
 ibm-cloud-sdk-core==3.10.0
