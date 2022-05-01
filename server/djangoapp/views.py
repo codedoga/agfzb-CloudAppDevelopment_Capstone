@@ -103,7 +103,7 @@ def get_dealer_details(request, dealer_id):
             return HttpResponse(content="Unavailable", status=404)
         dealer = dealer[0] if dealer else None
         url = f'http://{request.META["HTTP_HOST"]}/api/review?dealerId={dealer_id}'
-        json_result = get_dealer_by_id_from_cf(url, dealer_id)
+        json_result = get_dealer_by_id_from_cf(dealer_id)
         return render(request, 'djangoapp/dealer_details.html', context={"dealer":dealer,"reviews":json_result})
 
 

@@ -37,7 +37,8 @@ def get_dealers_from_cf(*args, **kwargs):
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
 def get_dealer_by_id_from_cf(dealerId, *args, **kwargs):
     results = []
-    url = f"http://codedoga-cloudapp.eu-gb.mybluemix.net/api/reviews"
+    url = f"http://codedoga-cloudapp.eu-gb.mybluemix.net/api/review"
+    
     json_result = requests.get(url).json()
     for review in json_result:
         if str(review["dealership"]) == dealerId:
@@ -64,7 +65,7 @@ def analyze_review_sentiments(dealerreview):
 
         emotion = sentiment["keywords"][0]["sentiment"]["label"]
     except:
-        emotion = "not determined"
+        emotion = "neutral"
 
     return emotion
 
