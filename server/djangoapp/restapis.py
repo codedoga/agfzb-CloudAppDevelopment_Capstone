@@ -61,9 +61,11 @@ def analyze_review_sentiments(dealerreview):
         params = urllib.parse.urlencode(analyze_dict)
 
         auth=HTTPBasicAuth('apikey', 'GfHwVoCJ2jMvLgK1G2f2cyIiTFslWR9z2ga4dqVM98ed')
-        sentiment = requests.Session().get(f"https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/38b98698-dbf0-4d66-8ba0-76918e65e325/v1/analyze?{params}", auth=auth).json()
+        sentiment = requests.Session().get(f"https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/38b98698-dbf0-4d66-8ba0-76918e65e325/v1/analyze?{params}", auth=auth)
 
-        emotion = sentiment["keywords"][0]["sentiment"]["label"]
+        json_resp = sentiment.json()
+
+        emotion = json_resp["keywords"][0]["sentiment"]["label"] if json_resp["keywords"] else "neutral"
     except:
         emotion = "neutral"
 

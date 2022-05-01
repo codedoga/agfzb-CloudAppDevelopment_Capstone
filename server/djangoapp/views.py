@@ -96,13 +96,11 @@ def get_dealerships(request):
 def get_dealer_details(request, dealer_id):
     context = {}
     if request.method == "GET":
-        url = "http://" + request.META["HTTP_HOST"] + "/api/dealership"
-        dealerships = get_dealers_from_cf(url)
+        dealerships = get_dealers_from_cf()
         dealer = [i for i in dealerships if i.id == int(dealer_id)]
         if not dealer:
             return HttpResponse(content="Unavailable", status=404)
         dealer = dealer[0] if dealer else None
-        url = f'http://{request.META["HTTP_HOST"]}/api/review?dealerId={dealer_id}'
         json_result = get_dealer_by_id_from_cf(dealer_id)
         return render(request, 'djangoapp/dealer_details.html', context={"dealer":dealer,"reviews":json_result})
 
@@ -114,10 +112,9 @@ def add_review(request):
 
         return render(request, 'djangoapp/add_review.html')
     if request.method == "POST":
-
         data = request.POST
         api_body = {"review":{"name":data["name"], "dealership":data["dealership"], "review": data["review"], "purchase": True if "purchase" in data else False, "purchase_date":data["purchase_date"], "car_make": data["car_make"], "car_model":data["car_model"], "car_year":data["car_year"]}}
-        requests.post(f'http://{request.META["HTTP_HOST"]}/api/review', json=api_body)
+        requests.post(f'http://codedoga-cloudapp.eu-gb.mybluemix.net/api/review', json=api_body)
 
         return redirect(f"/djangoapp/details/{data['dealership']}")
 
