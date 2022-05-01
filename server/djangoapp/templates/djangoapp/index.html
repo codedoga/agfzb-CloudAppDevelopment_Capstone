@@ -76,6 +76,26 @@
     </nav>
 
     <!--Add a dealer table here -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Dealership</th>
+          <th scope="col">Address</th>
+          <th scope="col">City</th>
+          <th scope="col">State</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dealer in dealers %}
+        <tr>
+          <td> <a href="details/{{dealer.id}}">{{dealer.full_name}}</a> </td>
+          <td> {{dealer.address}} </td>
+          <td> {{dealer.city}} </td>
+          <td> {{dealer.state}} </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    <table>
 
 </body>
 

@@ -9,6 +9,10 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
+from django.urls import reverse_lazy
+import requests
+from djangoapp.restapis import get_dealers_from_cf, get_dealer_by_id_from_cf
+import random
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -18,12 +22,13 @@ logger = logging.getLogger(__name__)
 
 
 # Create an `about` view to render a static about page
-# def about(request):
-# ...
+def about(request):
+    return render(request, 'djangoapp/about.html')
 
 
 # Create a `contact` view to return a static contact page
-#def contact(request):
+def contact(request):
+    return render(request, 'djangoapp/contact.html')
 
 # Create a `login_request` view to handle sign in request
 def login_request(request):
@@ -79,19 +84,41 @@ def registration_request(request):
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
-        return render(request, 'djangoapp/index.html', context)
+        results = []
+        url = "http://" + request.META["HTTP_HOST"] + "/api/dealership"
+        dealerships = get_dealers_from_cf(url)
+        dealer_names = [dealer.short_name for dealer in dealerships]
+        return render(request, 'djangoapp/index.html', context={"dealers": dealerships})
 
-def about(request):
-    return render(request, 'djangoapp/about.html')
 
-def contact(request):
-    return render(request, 'djangoapp/contact.html')
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
+def get_dealer_details(request, dealer_id):
+    context = {}
+    if request.method == "GET":
+        url = "http://" + request.META["HTTP_HOST"] + "/api/dealership"
+        dealerships = get_dealers_from_cf(url)
+        dealer = [i for i in dealerships if i.id == int(dealer_id)]
+        if not dealer:
+            return HttpResponse(content="Unavailable", status=404)
+        dealer = dealer[0] if dealer else None
+        url = f'http://{request.META["HTTP_HOST"]}/api/review?dealerId={dealer_id}'
+        json_result = get_dealer_by_id_from_cf(url, dealer_id)
+        return render(request, 'djangoapp/dealer_details.html', context={"dealer":dealer,"reviews":json_result})
+
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request):
+    if request.method == 'GET':
+        dealer_id = request.GET.get("dealer", None)
+
+        return render(request, 'djangoapp/add_review.html')
+    if request.method == "POST":
+
+        data = request.POST
+        api_body = {"review":{"name":data["name"], "dealership":data["dealership"], "review": data["review"], "purchase": True if "purchase" in data else False, "purchase_date":data["purchase_date"], "car_make": data["car_make"], "car_model":data["car_model"], "car_year":data["car_year"]}}
+        requests.post(f'http://{request.META["HTTP_HOST"]}/api/review', json=api_body)
+
+        return redirect(f"/djangoapp/details/{data['dealership']}")
+
 

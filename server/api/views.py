@@ -55,15 +55,16 @@ def review(request):
             db = client["reviews"].all_docs(include_docs=True)
             client.disconnect()
             if dealerId:
-                result = [i["doc"] for i in db["rows"] if i["doc"]["id"]==int(dealerId)]
+                result = [i["doc"] for i in db["rows"] if str(i["doc"]["dealership"])==dealerId]
             else:
                 result = [i["doc"] for i in db["rows"]]
 
             if dealerId and not result:
-                return JsonResponse({"error": "The dealerId does not exist"}, status=404)
+                return JsonResponse([], status=404, safe=False)
             
             if not dealerId and not result:
-                return JsonResponse({"error": "The database is empty"}, status=404)
+                return JsonResponse([], status=404, safe=False
+                )
 
             return JsonResponse(result, safe=False)
         except:
