@@ -6,11 +6,11 @@ WORKDIR /usr/src/app
 RUN apt-get -y update
 RUN apt-get -y install build-essential git python python-dev python-setuptools
 
-COPY ./requirements.txt /requirements.txt
+COPY server/requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt \
     && rm -rf /requirements.txt
 
-COPY . /usr/src/app
+COPY server/ /usr/src/app
 
 EXPOSE 80
 
