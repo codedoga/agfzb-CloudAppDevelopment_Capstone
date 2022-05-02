@@ -28,6 +28,7 @@ DEBUG = True
 APPEND_SLASH = True
 
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ['*']
 
 
 # Application definition
